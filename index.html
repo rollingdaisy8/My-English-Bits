@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f1e9" />
+  <title>My English Bits</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PERSONAL ENGLISH NOTE</p>
+        <h1>My English Bits</h1>
+        <p class="subtitle">내가 실제로 말한 문장을, 진짜 쓰는 영어로.</p>
+      </div>
+      <button class="icon-btn" id="themeBtn" aria-label="테마 전환">◐</button>
+    </header>
+
+    <main>
+      <section class="view active" id="todayView">
+        <div class="hero-card">
+          <div>
+            <span class="badge">TODAY</span>
+            <h2>오늘의 표현을<br />쌓아보세요.</h2>
+            <p>ChatGPT에서 정리한 JSON을 붙여넣거나 직접 추가할 수 있어요.</p>
+          </div>
+          <div class="hero-count">
+            <strong id="todayCount">0</strong>
+            <span>expressions</span>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">QUICK IMPORT</p>
+            <h3>오늘 표현 가져오기</h3>
+          </div>
+        </div>
+
+        <div class="panel">
+          <textarea id="jsonInput" rows="8" placeholder='예:
+[
+  {
+    "original": "I don’t wanna stop my face.",
+    "natural": "I don’t want to lose my pace.",
+    "alternative": "I don’t want to break my rhythm.",
+    "meaning": "페이스를 잃고 싶지 않아.",
+    "context": "jogging",
+    "tag": "running"
+  }
+]'></textarea>
+          <div class="button-row">
+            <button class="primary-btn" id="importBtn">JSON으로 추가</button>
+            <button class="ghost-btn" id="sampleBtn">샘플 넣기</button>
+          </div>
+          <p class="helper" id="importMessage"></p>
+        </div>
+
+        <details class="panel add-panel">
+          <summary>직접 한 문장 추가하기</summary>
+          <form id="manualForm" class="manual-form">
+            <label>내가 말한 문장
+              <input id="manualOriginal" type="text" placeholder="I everyday jog..." />
+            </label>
+            <label>자연스러운 영어
+              <input id="manualNatural" type="text" required placeholder="I go jogging every day." />
+            </label>
+            <label>대안 표현
+              <input id="manualAlternative" type="text" placeholder="I usually go for a run every day." />
+            </label>
+            <label>한국어 뜻
+              <input id="manualMeaning" type="text" required placeholder="나는 매일 조깅해." />
+            </label>
+            <div class="two-col">
+              <label>상황
+                <input id="manualContext" type="text" placeholder="evening jog" />
+              </label>
+              <label>태그
+                <input id="manualTag" type="text" placeholder="running" />
+              </label>
+            </div>
+            <button class="primary-btn" type="submit">표현 저장</button>
+          </form>
+        </details>
+
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">RECENT</p>
+            <h3>최근 저장한 표현</h3>
+          </div>
+        </div>
+        <div id="recentList" class="card-list"></div>
+      </section>
+
+      <section class="view" id="libraryView">
+        <div class="section-head sticky-head">
+          <div>
+            <p class="eyebrow">LIBRARY</p>
+            <h2>My Expressions</h2>
+          </div>
+          <span class="count-pill" id="libraryCount">0</span>
+        </div>
+
+        <div class="search-wrap">
+          <input id="searchInput" type="search" placeholder="표현, 뜻, 태그 검색" />
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="favorite">★</button>
+        </div>
+
+        <div id="libraryList" class="card-list"></div>
+      </section>
+
+      <section class="view" id="practiceView">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">PRACTICE</p>
+            <h2>말해보고 확인하기</h2>
+          </div>
+          <span class="count-pill" id="practiceRemaining">0</span>
+        </div>
+
+        <div class="practice-wrap">
+          <div class="practice-card" id="practiceCard">
+            <span class="badge" id="practiceTag">DAILY</span>
+            <p class="prompt-label">영어로 어떻게 말할까?</p>
+            <h3 id="practiceMeaning">표현을 저장하면 연습을 시작할 수 있어요.</h3>
+
+            <div class="answer-box hidden" id="answerBox">
+              <p class="answer-main" id="practiceNatural"></p>
+              <p class="answer-alt" id="practiceAlternative"></p>
+              <div class="original-box" id="originalBox">
+                <span>Your original</span>
+                <p id="practiceOriginal"></p>
+              </div>
+            </div>
+
+            <div class="practice-actions">
+              <button class="primary-btn wide" id="showAnswerBtn">정답 보기</button>
+              <div class="rating-row hidden" id="ratingRow">
+                <button class="ghost-btn" data-rating="again">Again</button>
+                <button class="ghost-btn" data-rating="good">Got it</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-stats">
+            <div><strong id="statTotal">0</strong><span>저장</span></div>
+            <div><strong id="statFavorites">0</strong><span>즐겨찾기</span></div>
+            <div><strong id="statPracticed">0</strong><span>연습</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="메인 메뉴">
+      <button class="nav-btn active" data-view="todayView">
+        <span>＋</span><small>Today</small>
+      </button>
+      <button class="nav-btn" data-view="libraryView">
+        <span>▤</span><small>Library</small>
+      </button>
+      <button class="nav-btn" data-view="practiceView">
+        <span>◎</span><small>Practice</small>
+      </button>
+    </nav>
+  </div>
+
+  <template id="expressionCardTemplate">
+    <article class="expression-card">
+      <div class="card-top">
+        <span class="tag"></span>
+        <button class="favorite-btn" aria-label="즐겨찾기">☆</button>
+      </div>
+      <h4 class="natural"></h4>
+      <p class="meaning"></p>
+      <div class="divider"></div>
+      <div class="small-copy">
+        <span>YOU SAID</span>
+        <p class="original"></p>
+      </div>
+      <div class="alternative-wrap">
+        <span>ALSO</span>
+        <p class="alternative"></p>
+      </div>
+      <div class="card-footer">
+        <span class="context"></span>
+        <button class="delete-btn">삭제</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
